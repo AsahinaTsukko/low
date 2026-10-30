@@ -11,4 +11,5 @@ pub use cli::Cli;
 pub use configs::session::Session;
 pub use llm::traits::Llm;
 pub use llm::deepseek::DeepSeek;
+pub use llm::base_url::*;
 pub use error::LowError;
