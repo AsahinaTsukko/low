@@ -1,4 +1,4 @@
-use crate::{Llm, LowError};
+use crate::{DEEPSEEK_BASE_URL, Llm, LowError};
 use serde_json::Value;
 
 #[derive(Default)]
@@ -7,7 +7,7 @@ pub struct DeepSeek {}
 impl Llm for DeepSeek {
     fn models(&self, http: reqwest::Client) -> impl std::future::Future<Output = Result<Vec<String>, LowError>> + Send {
         async move {
-            let resp = http.get("https://api.deepseek.com/models")
+            let resp = http.get(format!("{}/models", DEEPSEEK_BASE_URL))
                 .bearer_auth(
                 std::env::var("DEEPSEEK_API_KEY")?
                 )
