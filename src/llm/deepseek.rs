@@ -31,7 +31,7 @@ impl Llm for DeepSeek {
         }
     }
 
-    fn send(&self, http: reqwest::Client, requ: RequestType, retu: ReturnType) -> impl Future<Output = Result<Value, LowError>> {
+    fn send(&self, http: reqwest::Client, requ: RequestType, _retu: ReturnType) -> impl Future<Output = Result<Value, LowError>> {
         async move {
             match requ {
                 RequestType::Text { message, model } => {
