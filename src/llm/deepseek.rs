@@ -5,7 +5,7 @@ use serde_json::{Value, json};
 pub struct DeepSeek {}
 
 impl Llm for DeepSeek {
-    fn models(&self, http: reqwest::Client) -> impl std::future::Future<Output = Result<Vec<String>, LowError>> + Send {
+    fn models(&self, http: &reqwest::Client) -> impl std::future::Future<Output = Result<Vec<String>, LowError>> + Send {
         async move {
             let resp = http.get(format!("{}/models", DEEPSEEK_BASE_URL))
                 .bearer_auth(
@@ -31,7 +31,7 @@ impl Llm for DeepSeek {
         }
     }
 
-    fn send(&self, http: reqwest::Client, requ: RequestType, _retu: ReturnType) -> impl Future<Output = Result<Value, LowError>> {
+    fn send(&self, http: &reqwest::Client, requ: RequestType, _retu: ReturnType) -> impl Future<Output = Result<Value, LowError>> {
         async move {
             match requ {
                 RequestType::Text { message, model } => {
