@@ -6,7 +6,11 @@ pub enum LowError {
 
     Io(std::io::Error),
 
-    Var(std::env::VarError)
+    Var(std::env::VarError),
+
+    Serde(serde_json::Error),
+
+    Task(tokio::task::JoinError)
 }
 
 impl std::fmt::Display for LowError {
@@ -15,7 +19,9 @@ impl std::fmt::Display for LowError {
             LowError::Network(e) => write!(f, "网络错误，请检查网络连接或系统设置: {}", e),
             LowError::Api { status, message } => write!(f, "Api 错误，请检查LLM Api平台设置。状态：{}, 抛出错误: {}", status, message),
             LowError::Io(e) => write!(f, "无法进行磁盘IO：{}", e),
-            LowError::Var(e) => write!(f, "无法读取环境变量: {}", e)
+            LowError::Var(e) => write!(f, "无法读取环境变量: {}", e),
+            LowError::Serde(e) => write!(f, "Serde Json序列化失败: {}", e),
+            LowError::Task(e) => write!(f, "无法启动异步句柄: {}", e)
         }
     }
 }
@@ -37,5 +43,17 @@ impl From<reqwest::Error> for LowError {
 impl From<std::env::VarError> for LowError {
     fn from(value: std::env::VarError) -> Self {
         LowError::Var(value)
+    }
+}
+
+impl From<serde_json::Error> for LowError {
+    fn from(value: serde_json::Error) -> Self {
+        LowError::Serde(value)
+    }
+}
+
+impl From<tokio::task::JoinError> for LowError {
+    fn from(value: tokio::task::JoinError) -> Self {
+        LowError::Task(value)
     }
 }
