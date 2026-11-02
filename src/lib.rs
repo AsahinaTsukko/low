@@ -2,7 +2,7 @@ mod client;
 mod cli;
 mod error;
 mod llm;
-mod tool;
+mod tools;
 mod configs;
 
 // re-export
@@ -25,3 +25,8 @@ pub use client::{
 };
 /// 元组，具体传入由运行时决定
 pub use configs::models::Model;
+/// Json字段
+pub use configs::kind::Role;
+pub use configs::session::Message;
+
+pub use tools::tool_serve::start_api;
