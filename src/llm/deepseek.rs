@@ -5,7 +5,7 @@ use serde_json::{Value, json};
 pub struct DeepSeek {}
 
 impl Llm for DeepSeek {
-    fn models(&self, http: &reqwest::Client) -> impl std::future::Future<Output = Result<Vec<String>, LowError>> + Send {
+    fn models(&self, http: &reqwest::Client) -> impl std::future::Future<Output = Result<Vec<String>, LowError>> {
         async move {
             let resp = http.get(format!("{}/models", DEEPSEEK_BASE_URL))
                 .bearer_auth(
@@ -31,10 +31,12 @@ impl Llm for DeepSeek {
         }
     }
 
-    fn send(&self, http: &reqwest::Client, requ: RequestType, _retu: ReturnType) -> impl Future<Output = Result<Value, LowError>> {
+    fn singly_chat(&self, http: &reqwest::Client, requ: RequestType, _retu: ReturnType) -> impl Future<Output = Result<Vec<Value>, LowError>> {
         async move {
             match requ {
                 RequestType::Text { message, model } => {
+                    let mut messages: Vec<Value> = Vec::new();
+
                     let body = json!({
                         "model": model,
                         "messages": [
@@ -42,16 +44,14 @@ impl Llm for DeepSeek {
                         ]
                     });
 
-                    let resp = http.post(format!("{}/chat/completions", DEEPSEEK_BASE_URL))
-                        .header("Content-Type", "application/json")
-                        .bearer_auth(std::env::var("DEEPSEEK_API_KEY")?)
-                        .json(&body)
-                        .send()
-                        .await?;
+                    messages.push(body);
 
-                    let j: Value = resp.json().await?;
-
-                    Ok(j)
+                    // Ok(())
+                    todo!()
+                }
+                RequestType::Image { message, image, model } => {
+                    
+                    todo!()
                 }
             }
         }
