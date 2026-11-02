@@ -1,7 +1,11 @@
+use std::path::PathBuf;
+
 /// 请求类型
 pub enum RequestType {
     /// 用户的一段文本
     Text { message: String, model: String },
+    /// 上传图片
+    Image { message: Option<String>, image: PathBuf, model: String }
 }
 
 /// 返回类型
